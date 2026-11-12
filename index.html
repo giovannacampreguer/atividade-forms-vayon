@@ -26,10 +26,10 @@
           <legend>Vigência do Seguro</legend>
 
           <label for="inicioVigencia">Início de Vigência:</label>
-          <input type="date" id="inicioVigencia" name="inicioVigencia" />
+          <input type="date" id="inicioVigencia" name="inicioVigencia" onblur="validarInicioVigencia(); calcularVigencia()" />
 
           <label for="fimVigencia">Fim de Vigência:</label>
-          <input type="date" id="fimVigencia" name="fimVigencia" />
+          <input type="date" id="fimVigencia" name="fimVigencia" onblur="calcularVigencia()" />
 
           <label for="diasVigencia">Dias de Vigência:</label>
           <input type="number" id="diasVigencia" name="diasVigencia" disabled />
@@ -64,7 +64,7 @@
           <legend>Cobertura do Seguro</legend>
 
           <label for="cobertura">Tipo de Cobertura:</label>
-          <select id="cobertura" name="cobertura">
+          <select id="cobertura" name="cobertura" onchange="validarPremio()">
             <option value="">Selecione uma cobertura</option>
             <option value="incendio">Incêndio</option>
             <option value="furtos">Furtos</option>
@@ -72,7 +72,7 @@
           </select>
 
           <label for="valorPremio">Valor do Prêmio:</label>
-          <input type="number" id="valorPremio" name="valorPremio" />
+          <input type="number" id="valorPremio" name="valorPremio" onblur="validarPremio()" />
         </fieldset>
         <button type="submit">Enviar Solicitação</button>
       </form>
