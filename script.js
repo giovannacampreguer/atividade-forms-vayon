@@ -150,3 +150,7 @@ function validarPremio() {
     }
 
 }
+
+function enviarFormulario() {
+    alert("Formulário enviado com sucesso!");
+}
