@@ -11,26 +11,29 @@
       <h1>Solicitação de Seguro Empresarial</h1>
     </header>
     <main>
-      <form onsubmit="enviarFormulario()">
+      <form onsubmit=" return enviarFormulario(event)">
         <fieldset>
           <legend>Dados do Segurado</legend>
 
           <label for="nome">Nome do Segurado:</label>
-          <input type="text" id="nome" name="nome" />
+          <input type="text" id="nome" name="nome" required />
 
           <label for="cpf">CPF:</label>
-          <input type="text" id="cpf" name="cpf" onblur="validarCPF()" />
+          <input type="text" id="cpf" name="cpf" onblur="validarCPF()" required  />
+        <small id="erroCpf" class="mensagem-erro"></small>
         </fieldset>
 
         <fieldset>
           <legend>Vigência do Seguro</legend>
 
           <label for="inicioVigencia">Início de Vigência:</label>
-          <input type="date" id="inicioVigencia" name="inicioVigencia" onblur="validarInicioVigencia(); calcularVigencia()" />
-
+          <input type="date" id="inicioVigencia" name="inicioVigencia" onblur="validarInicioVigencia(); calcularVigencia()" required />
+          <small id="erroInicio" class="mensagem-erro"></small>
+          
           <label for="fimVigencia">Fim de Vigência:</label>
-          <input type="date" id="fimVigencia" name="fimVigencia" onblur="calcularVigencia()" />
-
+          <input type="date" id="fimVigencia" name="fimVigencia" onblur="calcularVigencia()" required  />
+          <small id="erroFim" class="mensagem-erro"></small>
+          
           <label for="diasVigencia">Dias de Vigência:</label>
           <input type="number" id="diasVigencia" name="diasVigencia" disabled />
         </fieldset>
@@ -39,22 +42,23 @@
           <legend>Endereço da Empresa</legend>
 
           <label for="cep">CEP:</label>
-          <input type="text" id="cep" name="cep" onblur="consultarCep()" />
+          <input type="text" id="cep" name="cep" onblur="consultarCep()" required />
+          <small id="erroCep" class="mensagem-erro"></small>
 
           <label for="estado">Estado:</label>
-          <input type="text" id="estado" name="estado" />
+          <input type="text" id="estado" name="estado" required  />
 
           <label for="cidade">Cidade:</label>
-          <input type="text" id="cidade" name="cidade" />
+          <input type="text" id="cidade" name="cidade" required  />
 
           <label for="logradouro">Logradouro:</label>
-          <input type="text" id="logradouro" name="logradouro" />
+          <input type="text" id="logradouro" name="logradouro" required  />
 
           <label for="bairro">Bairro:</label>
-          <input type="text" id="bairro" name="bairro" />
+          <input type="text" id="bairro" name="bairro" required />
 
           <label for="numero">Número:</label>
-          <input type="number" id="numero" name="numero" />
+          <input type="number" id="numero" name="numero" required />
 
           <label for="complemento">Complemento:</label>
           <input type="text" id="complemento" name="complemento" />
@@ -64,7 +68,7 @@
           <legend>Cobertura do Seguro</legend>
 
           <label for="cobertura">Tipo de Cobertura:</label>
-          <select id="cobertura" name="cobertura" onchange="validarPremio()">
+          <select id="cobertura" name="cobertura" onchange="validarPremio()" required >
             <option value="">Selecione uma cobertura</option>
             <option value="incendio">Incêndio</option>
             <option value="furtos">Furtos</option>
@@ -72,7 +76,8 @@
           </select>
 
           <label for="valorPremio">Valor do Prêmio:</label>
-          <input type="number" id="valorPremio" name="valorPremio" onblur="validarPremio()" />
+          <input type="number" id="valorPremio" name="valorPremio" onblur="validarPremio()" required  />
+          <small id="erroPremio" class="mensagem-erro"></small>
         </fieldset>
         <button type="submit">Enviar Solicitação</button>
       </form>

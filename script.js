@@ -30,14 +30,26 @@ let cepsAceitos =[
     "90010150",
     "69005040"
 ]
+let formularioValido = true;
 
 function validarCPF() {
 
     let cpf = document.getElementById("cpf").value;
 
     if (cpfsRecusados.includes(cpf)) {
-        alert("Este CPF está na lista de recusados.");
-        return;
+
+        document.getElementById("cpf").classList.add("erro");
+        document.getElementById("erroCpf").innerText = "Este CPF está na lista de recusados.";
+
+        return false;
+
+    } else {
+
+        document.getElementById("cpf").classList.remove("erro");
+        document.getElementById("erroCpf").innerText = "";
+
+        return true;
+
     }
 
 }
@@ -51,9 +63,20 @@ function validarInicioVigencia() {
 
     let dataInicio = new Date(inicio + "T00:00:00");
 
-    if (dataInicio < hoje) {
-        alert("A data não pode ser anterior ao dia atual.");
-        document.getElementById("inicioVigencia").value = "";
+    if (inicio !== "" && dataInicio < hoje) {
+
+        document.getElementById("inicioVigencia").classList.add("erro");
+        document.getElementById("erroInicio").innerText = "A data não pode ser anterior ao dia atual.";
+
+        return false;
+
+    } else {
+
+        document.getElementById("inicioVigencia").classList.remove("erro");
+        document.getElementById("erroInicio").innerText = "";
+
+        return true;
+
     }
 
 }
@@ -75,18 +98,26 @@ function calcularVigencia() {
 
     let dias = diferenca / (1000 * 60 * 60 * 24);
 
-    if (dias < 365) {
-        alert("A vigência precisa ser de pelo menos 365 dias.");
+    if (dias < 365){
 
-        document.getElementById("fimVigencia").value = "";
+    
+        document.getElementById("fimVigencia").classList.add("erro");
+        document.getElementById("erroFim").innerText = "A vigência precisa ser de pelo menos 365 dias.";
+
         document.getElementById("diasVigencia").value = "";
 
-        return;
-    }
+        return false;
 
-    document.getElementById("diasVigencia").value = dias;
+    } else {
 
-}
+        document.getElementById("fimVigencia").classList.remove("erro");
+        document.getElementById("erroFim").innerText = "";
+
+        document.getElementById("diasVigencia").value = dias;
+
+        return true;
+
+    } }
 
 
 function consultarCep() {
@@ -94,29 +125,33 @@ function consultarCep() {
     let cep = document.getElementById("cep").value;
 
     if (cepsRecusados.includes(cep)) {
-    alert("Este CEP está na lista de recusados.");
-    return;
-}
+        document.getElementById("cep").classList.add("erro");
+        document.getElementById("erroCep").innerText = "Este CEP está na lista de recusados.";
+        return Promise.resolve(false);
+    }
 
-    fetch("https://viacep.com.br/ws/" + cep + "/json/")
+    return fetch("https://viacep.com.br/ws/" + cep + "/json/")
         .then(function(resposta) {
             return resposta.json();
         })
         .then(function(dados) {
 
-        document.getElementById("estado").value = dados.estado;
+            document.getElementById("cep").classList.remove("erro");
+            document.getElementById("erroCep").innerText = "";
 
-        document.getElementById("cidade").value = dados.localidade;
+            document.getElementById("estado").value = dados.estado;
+            document.getElementById("cidade").value = dados.localidade;
+            document.getElementById("logradouro").value = dados.logradouro;
+            document.getElementById("bairro").value = dados.bairro;
 
-        document.getElementById("logradouro").value = dados.logradouro;
-
-        document.getElementById("bairro").value = dados.bairro;
-
-         console.log(dados);
+            return true;
+        })
+        .catch(function() {
+            document.getElementById("cep").classList.add("erro");
+            document.getElementById("erroCep").innerText = "Não foi possível consultar o CEP.";
+            return false;
         });
-
 }
-
 
 function validarPremio() {
 
@@ -129,28 +164,71 @@ function validarPremio() {
 
     valor = Number(valor);
 
+    
     if (valor < 5000) {
-        alert("O valor mínimo do prêmio é R$ 5.000,00.");
-        return;
+
+        document.getElementById("valorPremio").classList.add("erro");
+        document.getElementById("erroPremio").innerText = "O valor mínimo do prêmio é R$ 5.000,00.";
+
+        return false;
+
     }
 
     if (cobertura === "incendio" && valor > 1000000) {
-        alert("O valor máximo para incêndio é R$ 1.000.000,00.");
-        return;
+
+        document.getElementById("valorPremio").classList.add("erro");
+        document.getElementById("erroPremio").innerText = "O valor máximo para incêndio é R$ 1.000.000,00.";
+
+        return false;
+
     }
 
     if (cobertura === "furtos" && valor > 500000) {
-        alert("O valor máximo para furtos é R$ 500.000,00.");
-        return;
+
+        document.getElementById("valorPremio").classList.add("erro");
+        document.getElementById("erroPremio").innerText = "O valor máximo para furtos é R$ 500.000,00.";
+
+        return false;
+
     }
 
     if (cobertura === "danosEletricos" && valor > 1500000) {
-        alert("O valor máximo para danos elétricos é R$ 1.500.000,00.");
-        return;
+
+        document.getElementById("valorPremio").classList.add("erro");
+        document.getElementById("erroPremio").innerText = "O valor máximo para danos elétricos é R$ 1.500.000,00.";
+
+        return false;
+
     }
+
+    document.getElementById("valorPremio").classList.remove("erro");
+    document.getElementById("erroPremio").innerText = "";
+
+    return true;
 
 }
 
-function enviarFormulario() {
-    alert("Formulário enviado com sucesso!");
+function enviarFormulario(event) {
+    event.preventDefault();
+
+    let cpfValido = validarCPF();
+    let inicioValido = validarInicioVigencia();
+    let vigenciaValida = calcularVigencia();
+    let premioValido = validarPremio();
+
+    if (cpfValido === false || inicioValido === false || vigenciaValida === false || premioValido === false) {
+        return false;
+    }
+
+    consultarCep().then(function(cepValido) {
+
+        if (cepValido === false) {
+            return;
+        }
+
+        alert("Formulário enviado com sucesso!");
+
+    });
+
+    return false;
 }

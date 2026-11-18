@@ -69,3 +69,14 @@ button {
 button:hover {
     background-color: #193c5a;
 }
+
+.erro{
+    border: 1px solid red;
+}
+
+.mensagem-erro {
+    color: red;
+    font-size: 12px;
+    margin-top: 5px;
+    display: block;
+}
